@@ -8,6 +8,7 @@ interface EntryRowProps {
 
 interface Props {
   list: Entry[];
+  setList: (val: Entry[]) => void;
 }
 
 const EntryRow = (props: EntryRowProps): ReactElement => {
@@ -24,15 +25,19 @@ const EntryRow = (props: EntryRowProps): ReactElement => {
 export default function Entries(props: Props) {
   return (
     <Table responsive style={{ width: "100%", textAlign: "center" }}>
-      <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Category</th>
-        <th>Description</th>
-      </tr>
-      {props.list.map((element, index) => {
-        return <EntryRow key={index} data={element} />;
-      })}
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.list.map((element, index) => {
+          return <EntryRow key={index} data={element} />;
+        })}
+      </tbody>
     </Table>
   );
 }

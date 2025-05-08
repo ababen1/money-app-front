@@ -1,14 +1,22 @@
 import type { Entry } from "@src/types/types";
+import { useState } from "react";
 import { Button, Col, Form, Modal, ModalHeader, Row } from "react-bootstrap";
 
 interface Props {
   modalOpen: boolean;
   setModalOpen: (val: boolean) => void;
-  entryData: Omit<Entry, "id">;
-  setEntryData: (val: Omit<Entry, "id">) => void;
+  onSubmit: (newEntry: Omit<Entry, "id">) => void;
 }
 
 export default function NewEntryForm(props: Props) {
+  const [newEntry, setNewEntry] = useState<Omit<Entry, "id">>({
+    amount: 0,
+    category: 0,
+    date: new Date(),
+    description: "",
+    isExpense: true,
+  });
+
   return (
     <Modal
       show={props.modalOpen}
@@ -35,10 +43,10 @@ export default function NewEntryForm(props: Props) {
             <Col>
               <Form.Control
                 type="number"
-                value={props.entryData.amount}
+                value={newEntry.amount}
                 onChange={(e) => {
-                  props.setEntryData({
-                    ...props.entryData,
+                  setNewEntry({
+                    ...newEntry,
                     amount: parseFloat(e.target.value),
                   });
                 }}
@@ -54,8 +62,8 @@ export default function NewEntryForm(props: Props) {
             <Col>
               <Form.Select
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  props.setEntryData({
-                    ...props.entryData,
+                  setNewEntry({
+                    ...newEntry,
                     category: parseInt(e.target.value),
                   })
                 }
@@ -68,17 +76,25 @@ export default function NewEntryForm(props: Props) {
           <Form.Label>Description</Form.Label>
           <Form.Control
             type="text"
-            value={props.entryData.description}
+            value={newEntry.description}
             onChange={(e) =>
-              props.setEntryData({
-                ...props.entryData,
+              setNewEntry({
+                ...newEntry,
                 description: e.target.value,
               })
             }
           ></Form.Control>
           <br />
 
-          <Button type="submit">Save</Button>
+          <Button
+            variant="primary"
+            onClick={(_e) => {
+              props.onSubmit(newEntry);
+              props.setModalOpen(false);
+            }}
+          >
+            Save
+          </Button>
         </Form>
       </Modal.Body>
     </Modal>

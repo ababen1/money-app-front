@@ -2,37 +2,28 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import Entries from "@src/components/Entries";
 import type { Entry } from "@src/types/types";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import NewEntryForm from "@src/components/NewEntryForm";
-
-const tempList: Entry[] = [
-  {
-    id: 0,
-    amount: 100,
-    category: 0,
-    date: new Date(),
-    description: "income",
-    isExpense: false,
-  },
-];
+import WalletContext from "@src/context/WalletContext";
+import { saveWallet } from "@src/api/wallet-api";
 
 export default function EntriesPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [newEntry, setNewEntry] = useState<Omit<Entry, "id">>({
-    amount: 0,
-    category: 0,
-    date: new Date(),
-    description: "",
-    isExpense: true,
-  });
+  const { wallet, setWallet } = useContext(WalletContext);
+
+  const onSubmit = (newEntry: Omit<Entry, "id">) => {
+    const newId = wallet.length;
+    wallet.push({ ...newEntry, id: newId });
+    setWallet(wallet);
+    saveWallet(wallet);
+  };
 
   return (
     <Container fluid>
       <NewEntryForm
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        entryData={newEntry}
-        setEntryData={setNewEntry}
+        onSubmit={onSubmit}
       />
       <Row>
         <Col>
@@ -42,7 +33,7 @@ export default function EntriesPage() {
         </Col>
       </Row>
 
-      <Entries list={tempList} />
+      <Entries list={wallet} setList={setWallet} />
     </Container>
   );
 }
