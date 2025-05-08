@@ -1,8 +1,13 @@
 import type { ReactElement } from "react";
 import type { Entry } from "../types/types";
+import Table from "react-bootstrap/Table";
 
 interface EntryRowProps {
   data: Entry;
+}
+
+interface Props {
+  list: Entry[];
 }
 
 const EntryRow = (props: EntryRowProps): ReactElement => {
@@ -16,18 +21,18 @@ const EntryRow = (props: EntryRowProps): ReactElement => {
   );
 };
 
-export default function Entries(list: Entry[]) {
+export default function Entries(props: Props) {
   return (
-    <table>
+    <Table responsive style={{ width: "100%", textAlign: "center" }}>
       <tr>
         <th>Date</th>
         <th>Amount</th>
         <th>Category</th>
         <th>Description</th>
       </tr>
-      {list.map((element, index) => {
+      {props.list.map((element, index) => {
         return <EntryRow key={index} data={element} />;
       })}
-    </table>
+    </Table>
   );
 }
