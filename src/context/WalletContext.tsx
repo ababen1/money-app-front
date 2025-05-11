@@ -18,8 +18,11 @@ export const WalletContext = createContext<EntriesContext>({
 
 export const EntriesProvider = ({ children }: EntriesProvider) => {
   const [entries, setEntries] = useState<Entry[]>([]);
+  const fetchData = async () => {
+    setEntries(await fetchWallet());
+  };
   useEffect(() => {
-    setEntries(fetchWallet());
+    fetchData();
   }, []);
   return (
     <WalletContext.Provider value={{ wallet: entries, setWallet: setEntries }}>

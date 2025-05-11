@@ -5,17 +5,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useContext, useState } from "react";
 import NewEntryForm from "@src/components/NewEntryForm";
 import WalletContext from "@src/context/WalletContext";
-import { saveWallet } from "@src/api/wallet-api";
+import { addEntry } from "@src/api/wallet-api";
 
 export default function EntriesPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { wallet, setWallet } = useContext(WalletContext);
 
-  const onSubmit = (newEntry: Omit<Entry, "id">) => {
-    const newId = wallet.length;
-    wallet.push({ ...newEntry, id: newId });
-    setWallet(wallet);
-    saveWallet(wallet);
+  const onSubmit = async (newEntry: Omit<Entry, "id">) => {
+    const result = await addEntry(newEntry);
+    console.log(result);
   };
 
   return (

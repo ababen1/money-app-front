@@ -14,7 +14,7 @@ interface Props {
 const EntryRow = (props: EntryRowProps): ReactElement => {
   return (
     <tr>
-      <td>{props.data.date.toLocaleDateString()}</td>
+      <td>{new Date(props.data.date).toLocaleDateString()}</td>
       <td>{props.data.amount}</td>
       <td>{props.data.category}</td>
       <td>{props.data.description}</td>
@@ -34,9 +34,11 @@ export default function Entries(props: Props) {
         </tr>
       </thead>
       <tbody>
-        {props.list.map((element, index) => {
-          return <EntryRow key={index} data={element} />;
-        })}
+        {props.list.length > 0
+          ? props.list.map((element, index) => {
+              return <EntryRow key={index} data={element} />;
+            })
+          : ""}
       </tbody>
     </Table>
   );
